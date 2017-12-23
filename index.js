@@ -1,15 +1,88 @@
 #!/usr/bin/env node
 
+
+//Load configuration depending on environment
+var env       = process.env.NODE_ENV || 'development';
+var config    = require('./config')[env];
+
+var express   = require('express');
+var app       = express();
+var server    = require('http').createServer(app);
+
+var minimist  = require('minimist');
+var basicAuth = require('basic-auth');
+
+var argv = minimist(process.argv.slice(2), {
+    string: [ 'iri' ],
+    alias: {
+        h: 'help',
+        i: 'iri',
+        u: 'auth',
+        r: 'refresh',
+        p: 'port'
+    }
+});
+
+if (argv.refresh) {
+    if (argv.refresh < 5 || argv.refresh > 600 )
+    {
+        console.log("Refresh Value must be within 5 to 600 seconds.");
+        process.exit(0);
+    }
+}
+
+
+var port = config.port;
+var host = config.host;
+
+if (typeof argv.port === 'string'){
+    var portArgs = argv.port.split(':');
+    port = portArgs[1];
+    host = portArgs[0];
+} else {
+    if (argv.port) {
+        port = argv.port;
+    }
+}
+
+console.log('Serving IOTA peer dashboard at http://' + host + ':' + port);
+
+var authMiddleware = function (req, res, next) {
+    function unauthorized(res) {
+        res.set('WWW-Authenticate', 'Basic realm="Authorization Required"');
+
+        return res.sendStatus(401);
+    };
+
+    var user = basicAuth(req);
+
+    if (!user
+        || !user.name
+        || !user.pass
+        || (user.name !== config.auth.user)
+        || (user.pass !== config.auth.pass)
+    ) {
+        return unauthorized(res);
+    };
+
+    return next();
+};
+
+app.get('/', authMiddleware, function (req, res, next) {
+    return next();
+});
+
+server.listen(port, host);
+
+
+
 var rest = require('restler');
 var IOTA = require('iota.lib.js');
-var express = require('express')
-var app = express()
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
 var async = require('async');
-var minimist = require('minimist');
-var basicAuth = require('express-basic-auth');
-var jsonfile = require('jsonfile')
+var jsonfile = require('jsonfile');
+
+
+var io = require('socket.io')(server);
 
 var gNodeInfo = {};
 var gPeerInfo = [];
@@ -35,27 +108,6 @@ function generator(length, chars) {
 }
 
 var sockets = [];
-
-
-var argv = minimist(process.argv.slice(2), {
-    string: [ 'iri' ],
-    alias: {
-        h: 'help',
-        i: 'iri',
-        u: 'auth',
-        r: 'refresh',
-        p: 'port'
-    }
-});
-
-if (argv.refresh) {
-    if (argv.refresh < 5 || argv.refresh > 600 )
-    {
-        console.log("Refresh Value must be within 5 to 600 seconds.");
-        process.exit(0);
-    }
-}
-
 
 
 app.use(express.static(__dirname+'/public'));
@@ -204,19 +256,3 @@ getNeighbours();
 setInterval(function(){
     getSystemInfo();
 },30000);
-
-var port = 8888;
-var host = "127.0.0.1";
-
-if (typeof argv.port === 'string'){
-    var portArgs = argv.port.split(':');
-    port = portArgs[1];
-    host = portArgs[0];
-}
-else if (argv.port){
-    port = argv.port;
-}
-
-console.log("Serving IOTA peer dashboard at http://"+host+":"+port);
-
-server.listen(port,host);
