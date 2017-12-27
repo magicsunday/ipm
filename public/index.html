@@ -11,11 +11,16 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
+        <link rel="icon" type="image/png" href="img/sync.png">
+
         <!-- Custom styles for this template -->
         <link href="css/styles.css" rel="stylesheet">
         <link href="css/custom.css" rel="stylesheet">
     </head>
     <body>
+        <img hidden id="sync-favicon" src="img/sync.png">
+        <img hidden id="no-sync-favicon" src="img/no-sync.png">
+
         <header>
             <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
                 <a class="navbar-brand" href="#">
@@ -81,6 +86,7 @@
 
         <script src="/js/socket.io.js"></script>
         <script src="/js/component/peer.js"></script>
+        <script src="/component/favico.min.js"></script>
         <script src="/js/app.js"></script>
     </body>
 </html>
