@@ -1,100 +1,76 @@
-/*
- * Base structure
- */
+html {
+    position: relative;
+    min-height: 100%;
+}
 
-/* Move down content because we have a fixed navbar that is 3.5rem tall */
 body {
-    padding-top: 3.5rem;
-}
-
-/*
- * Typography
- */
-
-h1 {
-    padding-bottom: 9px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #eee;
-}
-
-h4 {
-    margin-bottom: 10px;
-}
-
-/*
- * Sidebar
- */
-.sidebar {
-    position: fixed;
-    top: 51px;
-    bottom: 0;
-    left: 0;
-    z-index: 1000;
-    padding: 20px 0;
     overflow-x: hidden;
-    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-    border-right: 1px solid #eee;
 }
 
-.sidebar .nav {
-    margin-bottom: 20px;
+body.fixed-nav {
+    padding-top: 56px;
 }
 
-.sidebar .nav-item {
-    width: 100%;
+.content-wrapper {
+    min-height: calc(100vh - 56px);
+    padding-top: 1rem;
 }
 
-.sidebar .nav-item + .nav-item {
-    margin-left: 0;
+#mainNav .navbar-collapse {
+  overflow: auto;
+  max-height: 75vh;
 }
 
-.sidebar .nav-link {
-    border-radius: 0;
+#mainNav .navbar-collapse .navbar-nav .nav-item .nav-link {
+    cursor: pointer;
 }
 
-/*
- * Dashboard
- */
+@media (min-width: 992px) {
+    #mainNav .navbar-brand {
+       width: 250px;
+    }
 
-/* Placeholders */
-.placeholders {
-    padding-bottom: 3rem;
+    #mainNav .navbar-collapse {
+        overflow: visible;
+        max-height: none;
+    }
 }
 
-.placeholder {
-    margin-bottom: 20px;
+.content-wrapper {
+    overflow-x: hidden;
+    background: white;
 }
 
-.placeholder section header {
-    padding: 5px;
-}
-
-.placeholder img {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
-}
-
-.panel header,
-.panel div,
-.panel table {
-    margin-top: 10px;
-    margin-bottom: 20px;
-}
-
-.panel header input {
-    width: 100%;
-}
-
-.panel div.text-info {
-    min-height: 50px;
-    max-height: 50px;
-    margin-top: 0px;
-    margin-bottom: 0px;
-    word-wrap: break-word;
+a.list-group-item {
     overflow: hidden;
 }
 
-table tr td {
-    width: 30%;
-    text-align: right;
+.card-header span {
+    overflow: hidden;
+    width: 80%;
+    min-height: 50px;
+}
+
+.card {
+    border-color: #d6e9c6 !important;
+}
+
+.card.border-success {
+    border-color: #d6e9c6 !important;
+}
+
+.card.border-danger {
+    border-color: #ebccd1 !important;
+}
+
+.card-header.bg-success {
+    color: #3c763d !important;
+    background-color: #dff0d8 !important;
+    border-color: #d6e9c6 !important;
+}
+
+.card-header.bg-danger {
+    color: #a94442 !important;
+    background-color: #f2dede !important;
+    border-color: #ebccd1 !important;
 }
