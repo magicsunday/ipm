@@ -45,8 +45,8 @@ var sockets = [];
 io.on('connection', function (socket) {
     sockets.push(socket);
 
-    getSystemInfo();
-    getNeighbors();
+//    getSystemInfo();
+//    getNeighbors();
 
     socket.on('disconnect', function(data){
         var i = sockets.indexOf(socket);
@@ -120,41 +120,37 @@ var iota = new IOTA({
  */
 function updatePeerInfo(peers)
 {
-//console.log('updatePeerInfo');
-//    emitToAllSockets('updatePeerList', peers, function (data) {
-//console.log('updatePeerList');
-//        if (data.result) {
-//console.log(data);
-//
-//        }
-//    });
-
-    peers.forEach(function (peer) {
-        var hostname = peer.address.match(/:/g)
-            ? peer.address.slice(0, peer.address.indexOf(':'))
-            : peer.address;
-
-        var iotaPeer = new IOTA({
-            'host': 'http://' + hostname,
-            'port': 14265
-        });
-
-        // Try to load node info of neighbor
-        iotaPeer.api.getNodeInfo(function (error, data) {
-            console.log('Getting node info:', hostname + ':14265');
-
-            if (error) {
-                console.error(error.message);
+    emitToAllSockets('updatePeerList', peers, function (data) {
+        if (data.result) {
+            peers.forEach(function (peer) {
+                var hostname = peer.address.match(/:/g)
+                    ? peer.address.slice(0, peer.address.indexOf(':'))
+                    : peer.address;
 
                 peer.nodeInfo = false;
-            } else {
-                peer.nodeInfo = data;
-            }
+                emitToAllSockets('peerInfo', peer);
 
-//            peer.tag = gTags[peer.address] || 'Unknown Peer';
+                var iotaPeer = new IOTA({
+                    'host': 'http://' + hostname,
+                    'port': 14265
+                });
 
-            emitToAllSockets('peerInfo', peer);
-        })
+                // Try to load node info of neighbor
+                iotaPeer.api.getNodeInfo(function (error, data) {
+                    console.log('Getting node info:', hostname + ':14265');
+
+                    if (error) {
+                        console.error(error.message);
+                    } else {
+                        peer.nodeInfo = data;
+                    }
+
+        //            peer.tag = gTags[peer.address] || 'Unknown Peer';
+
+                    emitToAllSockets('peerInfo', peer);
+                })
+            });
+        }
     });
 }
 
@@ -192,12 +188,8 @@ function getSystemInfo()
     });
 }
 
-// Update system info
+// Update system info and list of neighbors
 setInterval(function () {
     getSystemInfo();
-}, 30000);
-
-// Update list of neighbors
-setInterval(function () {
     getNeighbors();
 }, (app.argv.refresh * 1000) || 10000);

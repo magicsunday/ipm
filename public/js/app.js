@@ -26,7 +26,21 @@ var peerTemplate = {
 var vm = new Vue(peerTemplate);
 
 socket.on('updatePeerList', function (peers, fn) {
-    vm.peers = peers;
+    // Update list
+    for (var i = 0; i < vm.peers.length; ++i) {
+        var found = false;
+
+        for (var j = 0; j < peers.length; ++j) {
+            if (vm.peers[i].address === peers[j].address) {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            vm.peers.splice(i, 1);
+        }
+    }
 
     vm.peers.sort(function (a, b) {
         return b.numberOfNewTransactions - a.numberOfNewTransactions;
@@ -61,7 +75,7 @@ socket.on('peerInfo', function (info) {
 
         var seconds = time.getSeconds();
         var minutes = time.getMinutes();
-        var hour = time.getHours();
+        var hour    = time.getHours();
 
         var obj = Object.assign({}, item.history);
         obj.labels.push('' + hour + ':' + minutes + ':' + seconds);
