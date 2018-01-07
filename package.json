@@ -1,9 +1,9 @@
 {
     "name": "iota-pm",
-    "version": "1.1.0",
+    "version": "1.0.0",
     "description": "An IOTA IRI peer manager",
     "main": "index.js",
-    "author": "Akash Goswami",
+    "author": "Rico Sonntag",
     "license": "MIT",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
@@ -23,13 +23,13 @@
     "devDependencies": {},
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/akashgoswami/ipm.git"
+        "url": "git+https://github.com/magicsunday/ipm.git"
     },
     "bin": {
         "iota-pm": "./index.js"
     },
     "bugs": {
-        "url": "https://github.com/akashgoswami/ipm/issues"
+        "url": "https://github.com/magicsunday/ipm/issues"
     },
-    "homepage": "https://github.com/akashgoswami/ipm#readme"
+    "homepage": "https://github.com/magicsunday/ipm#readme"
 }
